@@ -1,0 +1,27 @@
+{
+  "name": "ethereum-tracker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/w3f/ethereum-tracker.git"
+  },
+  "author": "",
+  "license": "",
+  "dependencies": {
+    "decimal.js": "^7.2.4",
+    "dotenv-safe": "^4.0.3",
+    "web3": "^1.0.0-beta.34"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  },
+  "bugs": {
+    "url": "https://github.com/w3f/ethereum-tracker/issues"
+  },
+  "homepage": "https://github.com/w3f/ethereum-tracker#readme"
+}
