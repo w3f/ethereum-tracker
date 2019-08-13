@@ -1,10 +1,13 @@
 const Web3 = require('web3')
 const confirmEtherTransaction = require('./confirm')
-const TOKEN_ABI = require('./abi')
+const TOKEN_ABI = require('./dotABI')
 const CLAIM_ABI = require('./claimABI')
-
 const accountList = require('./address.json')
 
+const {
+  amountTransfer,
+  transactionCount
+} = require('./lib/prometheus.js')
 
 function watchEtherTransfers() {
   // Instantiate web3 with WebSocket provider
@@ -25,8 +28,6 @@ function watchEtherTransfers() {
         // Get transaction details
         const trx = await web3Http.eth.getTransaction(txHash)
 
-        // console.log('Found incoming Ether transaction from ' + process.env.WALLET_FROM + ' to ' + process.env.WALLET_TO);
-        console.log('Transaction value is: ' + process.env.AMOUNT)
         console.log('Transaction hash is: ' + txHash + '\n')
 
         // Initiate transaction confirmation
@@ -50,30 +51,26 @@ const options = {
   fromBlock: 'latest'
 }
 
-
 function watchTokenContractEvent() {
   // Instantiate web3 with WebSocketProvider
   const web3 = new Web3(new Web3.providers.WebsocketProvider(process.env.INFURA_WS_URL))
-
   // Instantiate token contract object with JSON ABI and address
   const tokenContract = new web3.eth.Contract(
     TOKEN_ABI, process.env.TOKEN_CONTRACT_ADDRESS,
     (error, result) => { if (error) console.log(error) }
   )
-
   // Subscribe to Transfer events matching filter criteria
   tokenContract.events.Transfer(options, async (error, result) => {
-    console.log('Transfer result :', result)
     if (error) {
       console.log(error)
       return
     }
 
-    const action = result.event
-    const { _from, _to, _value } = result.returnValues
+    const { from, to, value  } = result.returnValues
+    amountTransfer.observe( { from, to }, parseFloat(value)  / 1000)
+    transactionCount.set ( { from }, result.transactionIndex)
 
     // console.log('Found incoming Pluton transaction from ' + process.env.WALLET_FROM + ' to ' + process.env.WALLET_TO + '\n');
-    // console.log('Transaction value is: ' + process.env.AMOUNT)
     console.log('Transaction hash is: ' + result.transactionHash + '\n')
 
     // Initiate transaction confirmation
@@ -85,15 +82,17 @@ function watchTokenContractEvent() {
 function watchClaimContractEvent() {
     // Instantiate web3 with WebSocketProvider
     const web3 = new Web3(new Web3.providers.WebsocketProvider(process.env.INFURA_WS_URL))
-
     // Instantiate token contract object with JSON ABI and address
     const claimContract = new web3.eth.Contract(
-      CLAIM_ABI, process.env.TOKEN_CONTRACT_ADDRESS,
+      CLAIM_ABI, process.env.CLAIM_CONTRACT_ADDRESS,
       (error, result) => { if (error) console.log(error) }
     )
+  
+    claimContract.events.Claimed(options, async (error, result) => {
+      // console.log('Claimed event :', result)
+      const { eth } = result.returnValues
+      transactionCount.set ( { 'from' : eth }, result.transactionIndex)
 
-    claimContract.events.Amended(options, async (error, event) => {
-      console.log('Amended event :', event)
       if (error) {
         console.log(error)
         return
@@ -101,8 +100,11 @@ function watchClaimContractEvent() {
       return
     })
 
-    claimContract.events.Claimed(options, async (error, event) => {
-      console.log('Claimed event :', event)
+    claimContract.events.Amended(options, async (error, result) => {
+      // console.log('Amended event :', result)
+      const { original } = result.returnValues
+      transactionCount.set ( { 'from' : original }, result.transactionIndex)
+
       if (error) {
         console.log(error)
         return
@@ -110,8 +112,11 @@ function watchClaimContractEvent() {
       return
     })
 
-    claimContract.events.IndexAssigned(options, async (error, event) => {
-      console.log('IndexAssigned event :', event)
+    claimContract.events.Vested(options, async (error, result) => {
+      // console.log('Vested event :', result)
+      const { eth } = result.returnValues
+      transactionCount.set ( { 'from' : eth }, result.transactionIndex)
+
       if (error) {
         console.log(error)
         return
@@ -119,24 +124,17 @@ function watchClaimContractEvent() {
       return
     })
 
-    claimContract.events.Vested(options, async (error, event) => {
-      console.log('Vested event :', event)
+    claimContract.events.NewOwner(options, async (error, result) => {
+      // console.log('NewOwner event :', result)
+      const { old } = result.returnValues
+      transactionCount.set ( { 'from' : old }, result.transactionIndex)
+
       if (error) {
         console.log(error)
         return
       }
       return
     })
-
-    claimContract.events.NewOwner(options, async (error, event) => {
-      console.log('NewOwner event :', event)
-      if (error) {
-        console.log(error)
-        return
-      }
-      return
-    })
-
 }
 
 module.exports = {
