@@ -1,10 +1,10 @@
-const Web3 = require('web3')
+const web3 = require('./web3')
+const { transactionCount } = require('./lib/prometheus.js')
+const accountList = require('./address.json')
+
 
 async function getConfirmations(txHash) {
   try {
-    // Instantiate web3 with HttpProvider
-    const web3 = new Web3(process.env.INFURA_URL)
-
     // Get transaction details
     const trx = await web3.eth.getTransaction(txHash)
 
@@ -20,15 +20,22 @@ async function getConfirmations(txHash) {
   }
 }
 
-function confirmEtherTransaction(txHash, confirmations = 10) {
+function confirmEtherTransaction(txHash, confirmations = 1) {
   setTimeout(async () => {
     // Get current number of confirmations and compare it with sought-for value
     const trxConfirmations = await getConfirmations(txHash)
     console.log('Transaction with hash ' + txHash + ' has ' + trxConfirmations + ' confirmation(s)')
 
+    // Get transaction details
+    const trx = await web3.eth.getTransaction(txHash)
+    // console.log('trx details :', trx)
+    if (!accountList.includes(trx.from)) {
+      return
+    }
+
     if (trxConfirmations >= confirmations) {
       // Handle confirmation event according to your business logic
-
+      transactionCount.set ( { 'from' : trx.from }, trx.nonce)
       console.log('Transaction with hash ' + txHash + ' has been successfully confirmed')
 
       return
