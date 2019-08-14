@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "substrate-telemetry.appName" . }}
+  labels:
+    app: {{ include "substrate-telemetry.appName" . }}
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: {{ include "substrate-telemetry.appName" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "substrate-telemetry.appName" . }}
+    spec:
+      containers:
+      - name: {{ include "substrate-telemetry.appName" . }}
+        image: {{ .Values.image.repo }}:{{ .Values.image.tag }}
+        ports:
+        - name: metrics
+          containerPort: {{ .Values.port }}
+        readinessProbe:
+          httpGet:
+            path: /metrics
+            port: {{ .Values.port }}
+          initialDelaySeconds: 3
+          timeoutSeconds: 3
+        {{ if ne .Values.environment "ci" }}
+        resources:
+          limits:
+            memory: 100Mi
+          requests:
+            memory: 100Mi
+        {{ end }}

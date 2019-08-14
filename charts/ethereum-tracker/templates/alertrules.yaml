@@ -1,0 +1,20 @@
+{{ if ne .Values.environment "ci" }}
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: w3f
+  name: ethereum-tracker
+spec:
+  groups:
+  - name: ethereum-tracker.rules
+    rules:
+    - alert: NewTransaction
+      annotations:
+        summary: New Ethereum transaction
+        description: There were new transactions from {{ `{{ $labels.from }}` }}.
+      expr: rate(ethereum_tracker_account_nonce[1m]) > 0
+      for: 1m
+      labels:
+        severity: info
+{{ end }}
