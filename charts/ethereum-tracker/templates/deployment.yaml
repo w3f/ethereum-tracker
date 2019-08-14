@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "substrate-telemetry.appName" . }}
+  name: {{ include "ethereum-tracker.appName" . }}
   labels:
-    app: {{ include "substrate-telemetry.appName" . }}
+    app: {{ include "ethereum-tracker.appName" . }}
 spec:
   replicas: 1
   revisionHistoryLimit: 3
@@ -11,14 +11,14 @@ spec:
     type: RollingUpdate
   selector:
     matchLabels:
-      app: {{ include "substrate-telemetry.appName" . }}
+      app: {{ include "ethereum-tracker.appName" . }}
   template:
     metadata:
       labels:
-        app: {{ include "substrate-telemetry.appName" . }}
+        app: {{ include "ethereum-tracker.appName" . }}
     spec:
       containers:
-      - name: {{ include "substrate-telemetry.appName" . }}
+      - name: {{ include "ethereum-tracker.appName" . }}
         image: {{ .Values.image.repo }}:{{ .Values.image.tag }}
         ports:
         - name: metrics
