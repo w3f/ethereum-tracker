@@ -1,0 +1,93 @@
+version: 2
+
+jobs:
+  buildImage:
+    docker:
+      - image: web3f/ci-commons:v1.2.0
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          command: |
+            /scripts/build-image.sh web3f/ethereum-tracker .
+
+  publishImage:
+    docker:
+      - image: web3f/ci-commons:v1.2.0
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          command: |
+            /scripts/publish-image.sh web3f/ethereum-tracker
+
+  integrationTests:
+    docker:
+      - image: web3f/ci-commons:v1.2.0
+    steps:
+      - checkout
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          description: run integration tests
+          command: |
+            /scripts/integration-tests.sh
+
+  publishChart:
+    docker:
+      - image: web3f/ci-commons:v1.2.0
+    steps:
+      - checkout
+      - run:
+          command: |
+            /scripts/publish-chart.sh
+
+  deploy:
+    docker:
+      - image: web3f/ci-commons:v0.1.7
+    steps:
+      - checkout
+      - run:
+          command: |
+            ./scripts/deploy.sh
+
+workflows:
+  version: 2
+  test_and_deploy:
+    jobs:
+      - buildImage:
+          filters:
+            tags:
+              only: /.*/
+      - integrationTests:
+          filters:
+            tags:
+              only: /.*/
+      - publishChart:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+          requires:
+            - buildImage
+            - integrationTests
+      - publishImage:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+          requires:
+            - buildImage
+            - integrationTests
+
+      - deploy:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /v[0-9]+(\.[0-9]+)*/
+          requires:
+            - publishChart
+            - publishImage
