@@ -33,7 +33,6 @@ function watchTokenContractEvent() {
     const { from, to, value  } = result.returnValues 
     amountTransfer.observe( { from, to }, parseFloat(value)  / 1000)
 
-    console.log('Transaction hash is: ', result.transactionHash)      
     confirmEtherTransaction(result.transactionHash)
     return
   })
