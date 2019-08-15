@@ -36,3 +36,10 @@ spec:
           requests:
             memory: 100Mi
         {{ end }}
+        volumeMounts:
+        - name: config
+          mountPath: /app/config
+      volumes:
+      - name: config
+        configMap:
+          name: ethereum-tracker
