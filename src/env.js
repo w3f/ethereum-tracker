@@ -1,3 +1,3 @@
-const dotEnv = require('dotenv-safe')
+const dotEnv = require("dotenv-safe")
 
 dotEnv.load()
