@@ -1,7 +1,7 @@
 const confirmEtherTransaction = require("./confirm")
 const TOKEN_ABI = require("./abi/dot")
 const CLAIM_ABI = require("./abi/claim")
-const accountList = require("./address.json")
+const cfg = require("../config/main.json")
 const web3 = require("./web3")
 
 const { amountTransfer } = require("./lib/prometheus.js")
@@ -10,7 +10,7 @@ function watchTokenContractEvent() {
   // Instantiate token contract object with JSON ABI and address
   const tokenContract = new web3.eth.Contract(
     TOKEN_ABI,
-    process.env.TOKEN_CONTRACT_ADDRESS,
+    cfg.contracts.token,
     error => {
       if (error) console.log(error)
     }
@@ -19,7 +19,7 @@ function watchTokenContractEvent() {
   // Generate filter options
   const options = {
     filter: {
-      from: accountList
+      from: cfg.addresses
     },
     fromBlock: "latest"
   }
@@ -42,7 +42,7 @@ function watchClaimContractEvent() {
   // Instantiate token contract object with JSON ABI and address
   const claimContract = new web3.eth.Contract(
     CLAIM_ABI,
-    process.env.CLAIM_CONTRACT_ADDRESS,
+    cfg.contracts.claims,
     error => {
       if (error) console.log(error)
     }

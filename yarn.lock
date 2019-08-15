@@ -1031,11 +1031,6 @@ decamelize@^1.1.1:
   resolved "https://registry.yarnpkg.com/decamelize/-/decamelize-1.2.0.tgz#f6534d15148269b20352e7bee26f501f9a191290"
   integrity sha1-9lNNFRSCabIDUue+4m9QH5oZEpA=
 
-decimal.js@^7.2.4:
-  version "7.5.1"
-  resolved "https://registry.yarnpkg.com/decimal.js/-/decimal.js-7.5.1.tgz#cf4cf5eeb9faa24fc4ee6af361faebb7bfcca2ce"
-  integrity sha512-1K5Y6MykxQYfHBcFfAj2uBaLmwreq4MsjsvrlgcEOvg+X82IeeXlIVIVkBMiypksu+yo9vcYP6lfU3qTedofSQ==
-
 decode-uri-component@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/decode-uri-component/-/decode-uri-component-0.2.0.tgz#eb3913333458775cb84cd1a1fae062106bb87545"
@@ -1230,18 +1225,6 @@ dot-prop@^4.1.0:
   integrity sha512-tUMXrxlExSW6U2EXiiKGSBVdYgtV8qlHL+C10TsW4PURY/ic+eaysnSkwB4kA/mBlCyy/IKDJ+Lc3wbWeaXtuQ==
   dependencies:
     is-obj "^1.0.0"
-
-dotenv-safe@^4.0.3:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/dotenv-safe/-/dotenv-safe-4.0.4.tgz#8b0e7ced8e70b1d3c5d874ef9420e406f39425b3"
-  integrity sha1-iw587Y5wsdPF2HTvlCDkBvOUJbM=
-  dependencies:
-    dotenv "^4.0.0"
-
-dotenv@^4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-4.0.0.tgz#864ef1379aced55ce6f95debecdce179f7a0cd1d"
-  integrity sha1-hk7xN5rO1Vzm+V3r7NzhefegzR0=
 
 duplexer3@^0.1.4:
   version "0.1.4"

@@ -1,6 +1,7 @@
 const web3 = require("./web3")
 const { transactionCount } = require("./lib/prometheus.js")
-const accountList = require("./address.json")
+const cfg = require("../config/main.json")
+
 
 async function getConfirmations(txHash) {
   try {
@@ -33,7 +34,7 @@ function confirmEtherTransaction(txHash, confirmations = 1) {
     // Get transaction details
     const trx = await web3.eth.getTransaction(txHash)
     // console.log('trx details :', trx)
-    if (!accountList.includes(trx.from)) {
+    if (!cfg.addresses.includes(trx.from)) {
       return
     }
 
