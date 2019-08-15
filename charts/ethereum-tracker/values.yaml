@@ -1,0 +1,7 @@
+image:
+  repo: web3f/ethereum-tracker
+  tag: latest
+
+port: 3000
+
+environment: production
