@@ -1,7 +1,9 @@
-#!/bin/sh
+#!/bin/bash
+
+set -eox
 
 /scripts/deploy.sh -c community \
-                   helm \
-                   --set image.tag="${CIRCLE_TAG}" \
+                   -t helm \
+                   -a --set image.tag="${CIRCLE_TAG}" \
                    ethereum-tracker \
                    w3f/ethereum-tracker
