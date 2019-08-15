@@ -32,7 +32,7 @@ spec:
         {{ if ne .Values.environment "ci" }}
         resources:
           limits:
-            memory: 100Mi
+            memory: 600Mi
           requests:
             memory: 100Mi
         {{ end }}
