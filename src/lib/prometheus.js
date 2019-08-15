@@ -17,13 +17,13 @@ module.exports = {
   },
 
   amountTransfer: new promClient.Histogram({
-    name: "polkadot_transferred_amount",
+    name: "ethereum_tracker_transferred_amount",
     help: "Number of tokens have been moved",
     labelNames: ["from", "to"]
   }),
 
   transactionCount: new promClient.Gauge({
-    name: "polkadot_transaction_count",
+    name: "ethereum_tracker_transfer_total",
     help: "Number of transactions have been called",
     labelNames: ["from"]
   })

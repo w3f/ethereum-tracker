@@ -44,7 +44,7 @@ jobs:
 
   deploy:
     docker:
-      - image: web3f/ci-commons:v0.1.7
+      - image: web3f/ci-commons:v1.3.0
     steps:
       - checkout
       - run:
