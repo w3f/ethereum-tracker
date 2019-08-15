@@ -1,10 +1,10 @@
-require("./env")
 const watcher = require("./watcher")
 const prometheus = require("./lib/prometheus")
 const express = require("express")
+const cfg = require("../config/main.json")
 
 const app = express()
-const port = 3000
+const port = cfg.port
 
 async function start() {
   prometheus.injectMetricsRoute(app)
