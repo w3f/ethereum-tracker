@@ -3,7 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   labels:
-    app: w3f
+    app: ethereum-tracker
   name: ethereum-tracker
 spec:
   groups:
