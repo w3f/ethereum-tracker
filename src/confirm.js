@@ -2,7 +2,6 @@ const web3 = require("./web3")
 const { transactionCount } = require("./lib/prometheus.js")
 const cfg = require("../config/main.json")
 
-
 async function getConfirmations(txHash) {
   try {
     // Get transaction details
@@ -33,18 +32,21 @@ function confirmEtherTransaction(txHash, confirmations = 1) {
 
     // Get transaction details
     const trx = await web3.eth.getTransaction(txHash)
-    // console.log('trx details :', trx)
     if (!cfg.addresses.includes(trx.from)) {
+      console.log(
+        "The address is not inside in the monitoring list: ",
+        trx.from
+      )
       return
     }
 
     if (trxConfirmations >= confirmations) {
-      // Handle confirmation event according to your business logic
+      console.log("############# BINGO ############# :", trx.from)
       transactionCount.set({ from: trx.from }, trx.nonce)
       console.log(
         "Transaction with hash " + txHash + " has been successfully confirmed"
       )
-
+      console.log("Data has been recorded to the prometheus.")
       return
     }
     // Recursive call
