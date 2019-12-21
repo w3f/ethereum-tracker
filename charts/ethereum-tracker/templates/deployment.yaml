@@ -34,7 +34,7 @@ spec:
           limits:
             memory: 600Mi
           requests:
-            memory: 100Mi
+            memory: 600Mi
         {{ end }}
         volumeMounts:
         - name: config
