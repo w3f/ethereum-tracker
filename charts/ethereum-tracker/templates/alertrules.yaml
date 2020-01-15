@@ -13,7 +13,7 @@ spec:
       annotations:
         summary: New Ethereum transaction
         description: There were new transactions from {{ `{{ $labels.from }}` }}.
-      expr: increase(ethereum_tracker_account_nonce[2m]) > 0
+      expr: increase(ethereum_tracker_transfer_total[2m]) > 0
       for: 30s
       labels:
         severity: info
