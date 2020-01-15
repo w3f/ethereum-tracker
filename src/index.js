@@ -13,6 +13,9 @@ async function start() {
   watcher.watchTokenContractEvent()
   watcher.watchClaimContractEvent()
 
+  prometheus.transactionCount.set({ from: cfg.token }, -1)
+  prometheus.transactionCount.set({ from: cfg.claims }, -1)
+
   app.listen(port, () =>
     console.log(`Transaction Watcher listening on port ${port}`)
   )
