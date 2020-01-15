@@ -9,7 +9,7 @@ data:
       "infuraURL": "wss://mainnet.infura.io/ws",
       "contracts": {
         "token": "0xb59f67a8bff5d8cd03f6ac17265c550ed8f33907",
-        "claims": "0x2Ad55649e384646267Ab89bF952934df4b685E61"
+        "claims": "0xa2CBa0190290aF37b7e154AEdB06d16100Ff5907"
       },
       "addresses": [
         "0x00b46c2526e227482e2EbB8f4C69E4674d262E75",
