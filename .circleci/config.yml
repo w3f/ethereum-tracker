@@ -3,17 +3,25 @@ version: 2
 jobs:
   buildImage:
     docker:
-      - image: web3f/ci-commons:v1.7.1
+      - image: web3f/ci-commons:v2.0.1
     steps:
       - checkout
       - setup_remote_docker
       - run:
           command: |
             /scripts/build-image.sh web3f/ethereum-tracker .
+  helmLint:
+    docker:
+      - image: web3f/ci-commons:v2.0.1
+    steps:
+      - checkout
+      - run:
+          command: |
+            helm lint ./charts/ethereum-tracker
 
   publishImage:
     docker:
-      - image: web3f/ci-commons:v1.7.1
+      - image: web3f/ci-commons:v2.0.1
     steps:
       - checkout
       - setup_remote_docker
@@ -23,7 +31,7 @@ jobs:
 
   integrationTests:
     docker:
-      - image: web3f/ci-commons:v1.7.1
+      - image: web3f/ci-commons:v2.0.1
     steps:
       - checkout
       - setup_remote_docker:
@@ -35,7 +43,7 @@ jobs:
 
   publishChart:
     docker:
-      - image: web3f/ci-commons:v1.7.1
+      - image: web3f/ci-commons:v2.0.1
     steps:
       - checkout
       - run:
@@ -44,7 +52,7 @@ jobs:
 
   deploy:
     docker:
-      - image: web3f/ci-commons:v1.7.1
+      - image: web3f/ci-commons:v2.0.1
     steps:
       - checkout
       - run:
@@ -55,10 +63,16 @@ workflows:
   version: 2
   test_and_deploy:
     jobs:
+      - helmLint:
+          filters:
+            tags:
+              only: /.*/
       - buildImage:
           filters:
             tags:
               only: /.*/
+          requires:
+            - helmLint    
       - integrationTests:
           filters:
             tags:
