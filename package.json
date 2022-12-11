@@ -15,7 +15,7 @@
   "author": "",
   "license": "GPL-3.0",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "prom-client": "^11.5.3",
     "web3": "^1.0.0-beta.34"
   },
